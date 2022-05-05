@@ -18,7 +18,16 @@ html {font-size: 0.85rem;}
 @font-face {
   font-family: Dossier;
   src:  url('../fonts/Dossier.woff2') format('woff2'),
-        url('../fonts/Dossier.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: ComicCode;
+  src:  url('../fonts/ComicCode.woff2') format('woff2'),
+}
+
+code, kbd, pre, samp {
+  font-family: 'ComicCode';
 }
 
 // @font-face {
