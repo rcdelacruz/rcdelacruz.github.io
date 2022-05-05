@@ -10,3 +10,37 @@ $tab-count: {{ site.tabs | size | plus: 1 }}; // plus 1 for home tab
 @import "{{ site.theme }}";
 
 /* append your custom style below */
+
+html {font-size: 0.85rem;} 
+
+#avatar {zoom: 140%;}
+
+@font-face {
+  font-family: Dossier;
+  src:  url('../fonts/Dossier.woff2') format('woff2'),
+        url('../fonts/Dossier.woff') format('woff');
+}
+
+// @font-face {
+//   font-family: Dossier-Italic;
+//   src:  url('../fonts/Dossier-Italic.woff2') format('woff2'),
+//         url('../fonts/Dossier-Italic.woff') format('woff');
+// }
+
+// @font-face {
+//   font-family: Dossier-Bold;
+//   src:  url('../fonts/Dossier-Bold.woff2') format('woff2'),
+//         url('../fonts/Dossier-Bold.woff') format('woff');
+// }
+
+// @font-face {
+//   font-family: Dossier-BoldItalic;
+//   src:  url('../fonts/Dossier-BoldItalic.woff2') format('woff2'),
+//         url('../fonts/Dossier-BoldItalic.woff') format('woff');
+// }
+
+// @font-face {
+//   font-family: Platia;
+//   src:  url('../fonts/PlatiaTosche-Regular.woff2') format('woff2'),
+//         url('../fonts/PlatiaTosche-Regular.woff') format('woff');
+// }

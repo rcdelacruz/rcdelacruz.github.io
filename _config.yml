@@ -23,9 +23,9 @@ timezone: Asia/Shanghai
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: "codewarrior"                          # the main title
+title: ""                          # the main title
 
-tagline: "> a techy's life"   # it will display as the sub-title
+tagline: "> a_techy\\'s_life"   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
  a jouney to my tech life.
