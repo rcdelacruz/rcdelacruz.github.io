@@ -28,7 +28,7 @@ title: ""                          # the main title
 tagline: "> a_techy\\'s_life"   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
- a jouney to my tech life.
+ a journey to my tech life.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://rcdelacruz.github.io'
