@@ -1,5 +1,5 @@
 ---
-title: How to bluetooth device auto connect after Ubuntu Login
+title: How to auto connect bluetooth device after Ubuntu Login
 author: ronald_dc
 categories: [Blogging, Infrastructure]
 tags: [ubuntu, bluetooth autoconnect]
