@@ -1,0 +1,207 @@
+<!DOCTYPE html><html lang="en" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.2.2" /><meta property="og:title" content="Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict" /><meta name="author" content="Ronald Dela Cruz" /><meta property="og:locale" content="en" /><meta name="description" content="0. If you didn’t find the solution in other answers…" /><meta property="og:description" content="0. If you didn’t find the solution in other answers…" /><link rel="canonical" href="https://rcdelacruz.github.io/posts/node-affinity-fix/" /><meta property="og:url" content="https://rcdelacruz.github.io/posts/node-affinity-fix/" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2022-06-15T00:00:00+08:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict" /><meta name="twitter:site" content="@ronald_dc" /><meta name="twitter:creator" content="@ronald_dc" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Ronald Dela Cruz","url":"https://github.com/rcdelacruz/"},"dateModified":"2022-06-15T00:00:00+08:00","datePublished":"2022-06-15T00:00:00+08:00","description":"0. If you didn’t find the solution in other answers…","headline":"Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict","mainEntityOfPage":{"@type":"WebPage","@id":"https://rcdelacruz.github.io/posts/node-affinity-fix/"},"url":"https://rcdelacruz.github.io/posts/node-affinity-fix/"}</script><title>Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict |</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content=""><meta name="application-name" content=""><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get MODE_ATTR() { return "data-mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } static get ID() { return "mode-toggle"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } let self = this; /* always follow the system prefers */ this.sysDarkPrefers.addEventListener("change", () => { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.notify(); }); } /* constructor() */ get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode === ModeToggle.DARK_MODE; } get isLightMode() { return this.mode === ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } setDark() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_ATTR); sessionStorage.removeItem(ModeToggle.MODE_KEY); } /* Notify another plugins that the theme mode has changed */ notify() { window.postMessage({ direction: ModeToggle.ID, message: this.modeStatus }, "*"); } } /* ModeToggle */ const toggle = new ModeToggle(); function flipMode() { if (toggle.hasMode) { if (toggle.isSysDarkPrefer) { if (toggle.isLightMode) { toggle.clearMode(); } else { toggle.setLight(); } } else { if (toggle.isDarkMode) { toggle.clearMode(); } else { toggle.setDark(); } } } else { if (toggle.isSysDarkPrefer) { toggle.setLight(); } else { toggle.setDark(); } } toggle.notify(); } /* flipMode() */ </script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://user-images.githubusercontent.com/1572470/166234173-ec6bbd2e-bb3f-4b53-a44e-63242d4a14fc.jpg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/"></a></div><div class="site-subtitle font-italic">> a_techy\'s_life</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <button class="mode-toggle btn" aria-label="Switch Mode"> <i class="fas fa-adjust"></i> </button> <span class="icon-border"></span> <a href="https://github.com/rcdelacruz" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href="https://twitter.com/ronald_dc" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href="https://www.linkedin.com/in/ronald-dela-cruz" aria-label="linkedin" target="_blank" rel="noopener"> <i class="fab fa-linkedin"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['rcdelacruz','proton.me'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a> <a href="" aria-label="" target="_blank" rel="noopener"> <i class=""></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Kubernetes Pod Warning: 1 node(s) had volume node affinity conflict</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1655222400" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jun 15, 2022 </em> </span><div class="d-flex justify-content-between"> <span> By <em> <a href="https://github.com/rcdelacruz/">Ronald Dela Cruz</a> </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="754 words"> <em>4 min</em> read</span></div></div></div><div class="post-content"><h2 id="0-if-you-didnt-find-the-solution-in-other-answers"><span class="mr-2"><strong>0. If you didn’t find the solution in other answers…</strong></span><a href="#0-if-you-didnt-find-the-solution-in-other-answers" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>In our case the error happened on a AWS EKS cluster freshly provisioned with Pulumi (see <a href="https://github.com/jonashackt/tekton-argocd-eks/blob/main/eks-deployment/index.ts">full source here</a>). The error drove me nuts, since I didn’t change anything, just created a <code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code> <a href="https://buildpacks.io/docs/tools/tekton/#41-pvcs">as described in the Buildpacks Tekton docs</a>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: buildpacks-source-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+
+</pre></table></code></div></div><p>I didn’t change anything else from the default EKS configuration and also didn’t add/change any <code class="language-plaintext highlighter-rouge">PersistentVolume</code> or <code class="language-plaintext highlighter-rouge">StorageClass</code> (in fact I didn’t even know how to do that). As the default EKS setup seems to rely on 2 nodes, I got the error:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre>0/2 nodes are available: 2 node(s) had volume node affinity conflict.
+
+</pre></table></code></div></div><p>Reading through <a href="https://stackoverflow.com/a/55514852/4964553">Sownak Roy’s answer</a> I got a first glue what to do - but didn’t know <em>how to do it</em>. So for the folks interested <strong>here are all my steps to resolve the error</strong>:</p><blockquote><p><strong><em>Warning:</em></strong> This will delete all your data, make sure you have backups.</p></blockquote><h2 id="1-check-eks-nodes-failure-domainbetakubernetesio-labels"><span class="mr-2"><strong>1. Check EKS nodes <code class="language-plaintext highlighter-rouge"><span class="mr-2">failure-domain.beta.kubernetes.io</code> labels</strong></span><a href="#1-check-eks-nodes-failure-domainbetakubernetesio-labels" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>As described in the section <code class="language-plaintext highlighter-rouge">Statefull applications</code> <a href="https://vorozhko.net/120-days-of-aws-eks-kubernetes-in-staging">in this post</a> two nodes are provisioned on other AWS availability zones as the persistent volume (PV), which is created by applying our <code class="language-plaintext highlighter-rouge">PersistendVolumeClaim</code> described above.</p><p>To check that, you need to look into/describe your nodes with <code class="language-plaintext highlighter-rouge">kubectl get nodes</code>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre>$ kubectl get nodes
+NAME                                             STATUS   ROLES    AGE     VERSION
+ip-172-31-10-186.eu-central-1.compute.internal   Ready    &lt;none&gt;   2d16h   v1.21.5-eks-bc4871b
+ip-172-31-20-83.eu-central-1.compute.internal    Ready    &lt;none&gt;   2d16h   v1.21.5-eks-bc4871b
+
+</pre></table></code></div></div><p>and then have a look at the <code class="language-plaintext highlighter-rouge">Label</code> section using <code class="language-plaintext highlighter-rouge">kubectl describe node &lt;node-name&gt;</code>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre>$ kubectl describe node ip-172-77-88-99.eu-central-1.compute.internal
+Name:               ip-172-77-88-99.eu-central-1.compute.internal
+Roles:              &lt;none&gt;
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=t2.medium
+                    beta.kubernetes.io/os=linux
+                    failure-domain.beta.kubernetes.io/region=eu-central-1
+                    failure-domain.beta.kubernetes.io/zone=eu-central-1b
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=ip-172-77-88-99.eu-central-1.compute.internal
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=t2.medium
+                    topology.kubernetes.io/region=eu-central-1
+                    topology.kubernetes.io/zone=eu-central-1b
+Annotations:        node.alpha.kubernetes.io/ttl: 0
+...
+
+</pre></table></code></div></div><p>In my case the node <code class="language-plaintext highlighter-rouge">ip-172-77-88-99.eu-central-1.compute.internal</code> has <code class="language-plaintext highlighter-rouge">failure-domain.beta.kubernetes.io/region</code> defined as <code class="language-plaintext highlighter-rouge">eu-central-1</code> and the az with <code class="language-plaintext highlighter-rouge">failure-domain.beta.kubernetes.io/zone</code> to <code class="language-plaintext highlighter-rouge">eu-central-1b</code>.</p><p>And the other node defines <code class="language-plaintext highlighter-rouge">failure-domain.beta.kubernetes.io/zone</code> az <code class="language-plaintext highlighter-rouge">eu-central-1a</code>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre>$ kubectl describe nodes ip-172-31-10-186.eu-central-1.compute.internal
+Name:               ip-172-31-10-186.eu-central-1.compute.internal
+Roles:              &lt;none&gt;
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/instance-type=t2.medium
+                    beta.kubernetes.io/os=linux
+                    failure-domain.beta.kubernetes.io/region=eu-central-1
+                    failure-domain.beta.kubernetes.io/zone=eu-central-1a
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=ip-172-31-10-186.eu-central-1.compute.internal
+                    kubernetes.io/os=linux
+                    node.kubernetes.io/instance-type=t2.medium
+                    topology.kubernetes.io/region=eu-central-1
+                    topology.kubernetes.io/zone=eu-central-1a
+Annotations:        node.alpha.kubernetes.io/ttl: 0
+...
+
+</pre></table></code></div></div><h2 id="2-check-persistentvolumes-topologykubernetesio-field"><span class="mr-2"><strong>2. Check <code class="language-plaintext highlighter-rouge"><span class="mr-2">PersistentVolume</code>’s <code class="language-plaintext highlighter-rouge"><span class="mr-2">topology.kubernetes.io</code> field</strong></span><a href="#2-check-persistentvolumes-topologykubernetesio-field" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>Now we should check the <code class="language-plaintext highlighter-rouge">PersistentVolume</code> automatically provisioned after we manually applied our <code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code>. Use <code class="language-plaintext highlighter-rouge">kubectl get pv</code>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre><td class="rouge-code"><pre>$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                           STORAGECLASS   REASON   AGE
+pvc-93650993-6154-4bd0-bd1c-6260e7df49d3   1Gi        RWO            Delete           Bound    default/buildpacks-source-pvc   gp2                     21d
+
+</pre></table></code></div></div><p>followed by <code class="language-plaintext highlighter-rouge">kubectl describe pv &lt;pv-name&gt;</code></p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre>$ kubectl describe pv pvc-93650993-6154-4bd0-bd1c-6260e7df49d3
+Name:              pvc-93650993-6154-4bd0-bd1c-6260e7df49d3
+Labels:            topology.kubernetes.io/region=eu-central-1
+                   topology.kubernetes.io/zone=eu-central-1c
+Annotations:       kubernetes.io/createdby: aws-ebs-dynamic-provisioner
+...
+
+</pre></table></code></div></div><p>The <code class="language-plaintext highlighter-rouge">PersistentVolume</code> was configured with the label <code class="language-plaintext highlighter-rouge">topology.kubernetes.io/zone</code> in az <code class="language-plaintext highlighter-rouge">eu-central-1c</code>, <strong>which makes our Pods complain about not finding their volume - since they are in a completely different az!</strong></p><h2 id="3-add-allowedtopologies-to-storageclass"><span class="mr-2"><strong>3. Add <code class="language-plaintext highlighter-rouge"><span class="mr-2">allowedTopologies</code> to <code class="language-plaintext highlighter-rouge"><span class="mr-2">StorageClass</code></strong></span><a href="#3-add-allowedtopologies-to-storageclass" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>As <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/#allowed-topologies">stated in the Kubernetes docs</a> one solution to the problem is to add a <code class="language-plaintext highlighter-rouge">allowedTopologies</code> configuration to the <code class="language-plaintext highlighter-rouge">StorageClass</code>. If you already provisioned a EKS cluster like me, you need to retrieve your already defined <code class="language-plaintext highlighter-rouge">StorageClass</code> with</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre>kubectl get storageclasses gp2 -o yaml
+
+</pre></table></code></div></div><p>Save it to a file called <code class="language-plaintext highlighter-rouge">storage-class.yml</code> and add a <code class="language-plaintext highlighter-rouge">allowedTopologies</code> section that matches your node’s <code class="language-plaintext highlighter-rouge">failure-domain.beta.kubernetes.io</code> labels like this:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre><td class="rouge-code"><pre>allowedTopologies:
+- matchLabelExpressions:
+  - key: failure-domain.beta.kubernetes.io/zone
+    values:
+    - eu-central-1a
+    - eu-central-1b
+
+</pre></table></code></div></div><p>The <code class="language-plaintext highlighter-rouge">allowedTopologies</code> configuration defines that the <code class="language-plaintext highlighter-rouge">failure-domain.beta.kubernetes.io/zone</code> of the <code class="language-plaintext highlighter-rouge">PersistentVolume</code> must be either in <code class="language-plaintext highlighter-rouge">eu-central-1a</code> or <code class="language-plaintext highlighter-rouge">eu-central-1b</code> - not <code class="language-plaintext highlighter-rouge">eu-central-1c</code>!</p><p>The full <code class="language-plaintext highlighter-rouge">storage-class.yml</code> looks like this:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre><td class="rouge-code"><pre>apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2
+parameters:
+  fsType: ext4
+  type: gp2
+provisioner: kubernetes.io/aws-ebs
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowedTopologies:
+- matchLabelExpressions:
+  - key: failure-domain.beta.kubernetes.io/zone
+    values:
+    - eu-central-1a
+    - eu-central-1b
+
+</pre></table></code></div></div><p>Apply the enhanced <code class="language-plaintext highlighter-rouge">StorageClass</code> configuration to your EKS cluster with</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre>kubectl apply -f storage-class.yml
+
+</pre></table></code></div></div><h2 id="4-delete-persistentvolumeclaim-add-storageclassname-gp2-to-it-and-re-apply-it"><span class="mr-2"><strong>4. Delete <code class="language-plaintext highlighter-rouge"><span class="mr-2">PersistentVolumeClaim</code>, add <code class="language-plaintext highlighter-rouge"><span class="mr-2">storageClassName: gp2</code> to it and re-apply it</strong></span><a href="#4-delete-persistentvolumeclaim-add-storageclassname-gp2-to-it-and-re-apply-it" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>In order to get things working again, we need to delete the <code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code> first.</p><p>To map the <code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code> to our previously define <code class="language-plaintext highlighter-rouge">StorageClass</code> we need to add <code class="language-plaintext highlighter-rouge">storageClassName: gp2</code> to the PersistendVolumeClaim definition in our <code class="language-plaintext highlighter-rouge">pvc.yml</code>:</p><div class="language-plaintext highlighter-rouge"><div class="code-header"> <span data-label-text="Plaintext"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: buildpacks-source-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: gp2
+
+</pre></table></code></div></div><p>Finally re-apply the <code class="language-plaintext highlighter-rouge">PersistentVolumeClaim</code> with <code class="language-plaintext highlighter-rouge">kubectl apply -f pvc.yml</code>. This should resolve the error.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/kubernetes/'>Kubernetes</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/eks/" class="post-tag no-text-decoration" >EKS</a> <a href="/tags/kubernetes/" class="post-tag no-text-decoration" >Kubernetes</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Kubernetes+Pod+Warning%3A+1+node%28s%29+had+volume+node+affinity+conflict+-+&url=https%3A%2F%2Frcdelacruz.github.io%2Fposts%2Fnode-affinity-fix%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Kubernetes+Pod+Warning%3A+1+node%28s%29+had+volume+node+affinity+conflict+-+&u=https%3A%2F%2Frcdelacruz.github.io%2Fposts%2Fnode-affinity-fix%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Frcdelacruz.github.io%2Fposts%2Fnode-affinity-fix%2F&text=Kubernetes+Pod+Warning%3A+1+node%28s%29+had+volume+node+affinity+conflict+-+" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Frcdelacruz.github.io%2Fposts%2Fnode-affinity-fix%2F" data-toggle="tooltip" data-placement="top" title="Linkedin" target="_blank" rel="noopener" aria-label="Linkedin"> <i class="fa-fw fab fa-linkedin"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/autoconnect-bluetooth/">How to auto connect bluetooth device after Ubuntu Login</a><li><a href="/posts/setup-k3s/">Setup Kubernetes Cluster using K3S, MetalLB, LetsEncrypt on Bare Metal</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/kubernetes/">Kubernetes</a> <a class="post-tag" href="/tags/bluetooth-autoconnect/">bluetooth autoconnect</a> <a class="post-tag" href="/tags/cloud/">cloud</a> <a class="post-tag" href="/tags/eks/">EKS</a> <a class="post-tag" href="/tags/k3s/">k3s</a> <a class="post-tag" href="/tags/kubernetes/">kubernetes</a> <a class="post-tag" href="/tags/letsencrypt/">letsencrypt</a> <a class="post-tag" href="/tags/metallb/">metallb</a> <a class="post-tag" href="/tags/nginx-ingress/">nginx-ingress</a> <a class="post-tag" href="/tags/ubuntu/">ubuntu</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="tail-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/cost-of-k8s/"><div class="card-body"> <em class="small" data-ts="1652976000" data-df="ll" > May 20, 2022 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>The true cost of Kubernetes: People, Time and Productivity</h3><div class="text-muted small"><p> Kubernetes is a proven technology for container orchestration and is a great tool for running resilient applications, but the true cost is often underestimated. Our comparison explored the opportun...</p></div></div></a></div><div class="card"> <a href="/posts/autoconnect-bluetooth/"><div class="card-body"> <em class="small" data-ts="1655222400" data-df="ll" > Jun 15, 2022 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>How to auto connect bluetooth device after Ubuntu Login</h3><div class="text-muted small"><p> After installing Ubuntu 18.04 on my macbook, bluetooth did not worked out of the box. Wasting hours after hours finally I could managed to get bluetooth working. Problem: I paired my bluetooth spe...</p></div></div></a></div><div class="card"> <a href="/posts/setup-k3s/"><div class="card-body"> <em class="small" data-ts="1651368780" data-df="ll" > May 1, 2022 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Setup Kubernetes Cluster using K3S, MetalLB, LetsEncrypt on Bare Metal</h3><div class="text-muted small"><p> Setup K3S Cluster By default Rancher K3S comes with Traefik 1.7. We will setup K3S without Traefik ingress in this tutorial. Execute below command on master node 1. curl -sfL https://get.k3s...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/autoconnect-bluetooth/" class="btn btn-outline-primary" prompt="Older"><p>How to auto connect bluetooth device after Ubuntu Login</p></a><div class="btn btn-outline-primary disabled" prompt="Newer"><p>-</p></div></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center text-muted"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/rcdelacruz">Ronald DC</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/kubernetes/">Kubernetes</a> <a class="post-tag" href="/tags/bluetooth-autoconnect/">bluetooth autoconnect</a> <a class="post-tag" href="/tags/cloud/">cloud</a> <a class="post-tag" href="/tags/eks/">EKS</a> <a class="post-tag" href="/tags/k3s/">k3s</a> <a class="post-tag" href="/tags/kubernetes/">kubernetes</a> <a class="post-tag" href="/tags/letsencrypt/">letsencrypt</a> <a class="post-tag" href="/tags/metallb/">metallb</a> <a class="post-tag" href="/tags/nginx-ingress/">nginx-ingress</a> <a class="post-tag" href="/tags/ubuntu/">ubuntu</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>
