@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.service.expose: "true"
+    kompose.service.type: nodeport
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: strapi
+  name: strapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: strapi
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.service.expose: "true"
+        kompose.service.type: nodeport
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/strapi-dev-default: "true"
+        io.kompose.service: strapi
+    spec:
+      containers:
+        - env:
+            - name: ADMIN_JWT_SECRET
+              value: Churc975EvecMwbrF1V0yQ==
+            - name: API_TOKEN_SALT
+              value: JlnrvFNv6SoGVve8G1OiYg==
+            - name: APP_KEYS
+              value: cbEBsGziVvhsG19NgUMS8Q==,cldVfLJCaic8YKBdPGlrrg==,bLK+E0g1OqXXZRehfruvmg==,BrDwbmyfZDIqNYNq4gjT8A==
+            - name: DATABASE_CLIENT
+              value: postgres
+            - name: DATABASE_HOST
+              value: db
+            - name: DATABASE_NAME
+              value: strapi
+            - name: DATABASE_PASSWORD
+              value: strapi
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_USERNAME
+              value: strapi
+            - name: HOST
+              value: 0.0.0.0
+            - name: PORT
+              value: "1337"
+            - name: TRANSFER_TOKEN_SALT
+              value: HrV+i4amf6B//dMPXFFiKA==
+          image: rcdelacruz/my-strapi-app:js-amd64
+          name: strapi
+          ports:
+            - containerPort: 1337
+              hostPort: 1339
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/app/src
+              name: strapi-claim0
+            - mountPath: /opt/app/public/uploads
+              name: strapi-claim1
+      restartPolicy: Always
+      volumes:
+        - name: strapi-claim0
+          persistentVolumeClaim:
+            claimName: strapi-claim0
+        - name: strapi-claim1
+          persistentVolumeClaim:
+            claimName: strapi-claim1
